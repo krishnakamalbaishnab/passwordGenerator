@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyPassword Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .container {
+            max-width: 300px;
+            margin: auto;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 100%;
+        }
+        button {
+            padding: 10px;
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PyPassword Generator</h1>
+        <form action="/generate_password" method="post">
+            <label for="letters">Number of Letters:</label><br>
+            <input type="number" id="letters" name="letters" required><br>
+
+            <label for="symbols">Number of Symbols:</label><br>
+            <input type="number" id="symbols" name="symbols" required><br>
+
+            <label for="numbers">Number of Numbers:</label><br>
+            <input type="number" id="numbers" name="numbers" required><br>
+
+            <button type="submit">Generate Password</button>
+        </form>
+        <div id="result">
+            {% if password %}
+            Generated Password: {{ password }}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
