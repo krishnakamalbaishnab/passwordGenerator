@@ -46,3 +46,17 @@ Start the Flask server:
 
 
 python app.py
+
+Usage
+Enter the number of letters, symbols, and numbers you want in the password.
+Click the "Generate Password" button.
+The generated password will be displayed on the page.
+
+
+Contributing
+Feel free to open issues or submit pull requests if you have suggestions or improvements.
+
+
+
+
+
