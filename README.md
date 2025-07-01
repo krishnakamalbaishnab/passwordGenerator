@@ -21,7 +21,7 @@ A modern, secure web-based password generator built with Flask. Generate customi
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repository-url>
+   git clone <https://github.com/krishnakamalbaishnab/passwordGenerator>
    cd passwordGenerator
    ```
 
