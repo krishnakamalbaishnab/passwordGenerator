@@ -3,61 +3,532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyPassword Generator</title>
+    <title>PyPassword Generator - Secure Password Generator</title>
+    <meta name="description" content="Generate secure, customizable passwords with letters, symbols, and numbers">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary-color: #764ba2;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
+
         .container {
-            max-width: 300px;
-            margin: auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
         }
-        input {
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--dark-color);
+            font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 10px;
-            padding: 5px;
-            width: 100%;
         }
-        button {
-            padding: 10px;
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input {
             width: 100%;
-            background-color: #28a745;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             border: none;
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        button:hover {
-            background-color: #218838;
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
-        #result {
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: var(--border-radius);
+            border: 1px solid #dee2e6;
+        }
+
+        .password-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .password-field {
+            flex: 1;
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: var(--border-radius);
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: 500;
+            word-break: break-all;
+            color: var(--dark-color);
+        }
+
+        .copy-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .copy-btn.copied {
+            background: var(--info-color);
+        }
+
+        .strength-indicator {
             margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
+        }
+
+        .strength-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .strength-text {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .strength-score {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .strength-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            transition: var(--transition);
+            border-radius: 4px;
+        }
+
+        .strength-feedback {
+            margin-top: 10px;
+        }
+
+        .feedback-item {
+            background: #fff3cd;
+            color: #856404;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            border-left: 3px solid #ffc107;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--danger-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transform: translateX(400px);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .password-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .info-card .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .info-card .label {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .password-display {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .copy-btn {
+                justify-content: center;
+            }
+
+            .password-info {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>PyPassword Generator</h1>
-        <form action="/generate_password" method="post">
-            <label for="letters">Number of Letters:</label><br>
-            <input type="number" id="letters" name="letters" required><br>
+        <div class="header">
+            <h1><i class="fas fa-shield-alt"></i> PyPassword</h1>
+            <p>Generate secure, customizable passwords</p>
+        </div>
 
-            <label for="symbols">Number of Symbols:</label><br>
-            <input type="number" id="symbols" name="symbols" required><br>
+        {% if error %}
+        <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            {{ error }}
+        </div>
+        {% endif %}
 
-            <label for="numbers">Number of Numbers:</label><br>
-            <input type="number" id="numbers" name="numbers" required><br>
+        <form action="/generate_password" method="post" id="passwordForm">
+            <div class="form-group">
+                <label for="letters">
+                    <i class="fas fa-font"></i> Number of Letters (a-z, A-Z)
+                </label>
+                <div class="input-wrapper">
+                    <input type="number" id="letters" name="letters" min="0" max="50" 
+                           value="{{ letters or 8 }}" required>
+                    <i class="fas fa-font input-icon"></i>
+                </div>
+            </div>
 
-            <button type="submit">Generate Password</button>
+            <div class="form-group">
+                <label for="symbols">
+                    <i class="fas fa-hashtag"></i> Number of Symbols (!@#$%^&*...)
+                </label>
+                <div class="input-wrapper">
+                    <input type="number" id="symbols" name="symbols" min="0" max="50" 
+                           value="{{ symbols or 2 }}" required>
+                    <i class="fas fa-hashtag input-icon"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="numbers">
+                    <i class="fas fa-sort-numeric-up"></i> Number of Numbers (0-9)
+                </label>
+                <div class="input-wrapper">
+                    <input type="number" id="numbers" name="numbers" min="0" max="50" 
+                           value="{{ numbers or 2 }}" required>
+                    <i class="fas fa-sort-numeric-up input-icon"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="generate-btn">
+                <i class="fas fa-key"></i>
+                Generate Secure Password
+            </button>
         </form>
-        <div id="result">
-            {% if password %}
-            Generated Password: {{ password }}
+
+        {% if password %}
+        <div class="result-section">
+            <div class="password-info">
+                <div class="info-card">
+                    <div class="number">{{ letters }}</div>
+                    <div class="label">Letters</div>
+                </div>
+                <div class="info-card">
+                    <div class="number">{{ symbols }}</div>
+                    <div class="label">Symbols</div>
+                </div>
+                <div class="info-card">
+                    <div class="number">{{ numbers }}</div>
+                    <div class="label">Numbers</div>
+                </div>
+            </div>
+
+            <div class="password-display">
+                <input type="text" class="password-field" value="{{ password }}" readonly id="passwordOutput">
+                <button type="button" class="copy-btn" onclick="copyPassword()">
+                    <i class="fas fa-copy"></i>
+                    <span id="copyText">Copy</span>
+                </button>
+            </div>
+
+            {% if strength %}
+            <div class="strength-indicator">
+                <div class="strength-label">
+                    <span class="strength-text" style="color: {{ strength.color }}">
+                        Security: {{ strength.level }}
+                    </span>
+                    <span class="strength-score">{{ strength.score }}/100</span>
+                </div>
+                <div class="strength-bar">
+                    <div class="strength-fill" style="width: {{ strength.score }}%; background-color: {{ strength.color }}"></div>
+                </div>
+                {% if strength.feedback %}
+                <div class="strength-feedback">
+                    {% for feedback in strength.feedback %}
+                    <div class="feedback-item">
+                        <i class="fas fa-lightbulb"></i> {{ feedback }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
             {% endif %}
         </div>
+        {% endif %}
     </div>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>Password copied to clipboard!</span>
+    </div>
+
+    <script>
+        function copyPassword() {
+            const passwordField = document.getElementById('passwordOutput');
+            const copyBtn = document.querySelector('.copy-btn');
+            const copyText = document.getElementById('copyText');
+            const toast = document.getElementById('toast');
+
+            // Select and copy the password
+            passwordField.select();
+            passwordField.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                document.execCommand('copy');
+                
+                // Update button state
+                copyBtn.classList.add('copied');
+                copyText.textContent = 'Copied!';
+                
+                // Show toast notification
+                toast.classList.add('show');
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    copyBtn.classList.remove('copied');
+                    copyText.textContent = 'Copy';
+                    toast.classList.remove('show');
+                }, 2000);
+                
+            } catch (err) {
+                console.error('Failed to copy password: ', err);
+                alert('Failed to copy password. Please select and copy manually.');
+            }
+        }
+
+        // Modern clipboard API for browsers that support it
+        if (navigator.clipboard) {
+            function copyPassword() {
+                const passwordField = document.getElementById('passwordOutput');
+                const copyBtn = document.querySelector('.copy-btn');
+                const copyText = document.getElementById('copyText');
+                const toast = document.getElementById('toast');
+
+                navigator.clipboard.writeText(passwordField.value).then(() => {
+                    // Update button state
+                    copyBtn.classList.add('copied');
+                    copyText.textContent = 'Copied!';
+                    
+                    // Show toast notification
+                    toast.classList.add('show');
+                    
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        copyBtn.classList.remove('copied');
+                        copyText.textContent = 'Copy';
+                        toast.classList.remove('show');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy password: ', err);
+                    alert('Failed to copy password. Please select and copy manually.');
+                });
+            }
+        }
+
+        // Form validation
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            const letters = parseInt(document.getElementById('letters').value) || 0;
+            const symbols = parseInt(document.getElementById('symbols').value) || 0;
+            const numbers = parseInt(document.getElementById('numbers').value) || 0;
+            
+            if (letters + symbols + numbers === 0) {
+                e.preventDefault();
+                alert('Please specify at least one character type for your password.');
+                return false;
+            }
+            
+            if (letters + symbols + numbers > 128) {
+                e.preventDefault();
+                alert('Total password length cannot exceed 128 characters.');
+                return false;
+            }
+        });
+
+        // Auto-focus first input on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('letters').focus();
+        });
+    </script>
 </body>
 </html>
